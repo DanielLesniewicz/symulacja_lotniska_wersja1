@@ -1,5 +1,4 @@
 public class przykladowa_klasa {
-
     public static void main(String[] args) {
         System.out.println("Test Githuba nr 1");
         System.out.println("Test Githuba nr 2 - online ze strony github.com ");
@@ -7,6 +6,8 @@ public class przykladowa_klasa {
         System.out.println("kekekoooooooooooooooooooooe");
 
         System.out.println("wiadomosc do Patryka");
+
+        System.out.println("Odpowiedz dla Daniela xd");
 
 
         }
