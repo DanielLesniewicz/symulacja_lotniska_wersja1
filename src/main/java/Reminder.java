@@ -1,7 +1,7 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
-    //jakieś czary mary
+
     public class Reminder {
         Timer timer;
 
@@ -20,7 +20,7 @@ import java.util.TimerTask;
         // wywołanie odlicznia w mainie
         public static void main(String args[]) {
             //tu się wszystko dzieje
-            new Reminder(5); //czas w sekundach, tutaj: 5 sekund
+            new Reminder(5);
             System.out.format("Zaczynam lądowanie, potrwa 5 sekund!%n");
         }
 

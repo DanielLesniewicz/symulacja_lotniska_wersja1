@@ -41,7 +41,32 @@ public class WiezaKontroliLotow {
 
     }
 
+    public static void odliczanie(int sekundy)
+        {
+            long current = System.currentTimeMillis(); int i = sekundy; while(i > 0) {
+            if(System.currentTimeMillis() - current > 1000) {
+                System.out.println(i--);
+                current = System.currentTimeMillis();
+            }
+        }
+            System.out.println("Wykonano!");
+    }
 
 
-}
+
+        public static void main(String[] args) {
+
+
+        //przykłądowo wybrano
+
+            odliczanie(5);
+
+        }
+
+
+    }
+
+
+
+
 
