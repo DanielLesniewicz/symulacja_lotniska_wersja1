@@ -64,7 +64,7 @@ public class Towarowy extends  Samolot {
     @Override
     public void zatankuj()
     {
-
+        System.out.println("Zatankowano samolot towarowy!");
     }
 
     @Override

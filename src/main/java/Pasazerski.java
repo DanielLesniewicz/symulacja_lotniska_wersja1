@@ -22,7 +22,7 @@ public class Pasazerski extends Samolot {
     @Override
     public void zatankuj()
     {
-
+        System.out.println("Zatankowano samolot pasażerski!");
     }
     @Override
     public void ladowanie()

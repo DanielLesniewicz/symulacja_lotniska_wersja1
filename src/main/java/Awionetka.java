@@ -22,7 +22,7 @@ public class Awionetka extends Samolot {
     @Override
     public void zatankuj()
     {
-
+        System.out.println("Zatankowano awionetkę!");
     }
     @Override
     public void ladowanie()
