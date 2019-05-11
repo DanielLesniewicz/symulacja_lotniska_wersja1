@@ -1,3 +1,5 @@
+
+
 public class WiezaKontroliLotow {
 
     private int pasyPasazerskieWolne;
@@ -40,13 +42,6 @@ public class WiezaKontroliLotow {
     }
 
 
+
 }
 
-
-
-/*
-    public static void main(String[] args) {
-        System.out.println("abcd");
-
-    }
-*/
