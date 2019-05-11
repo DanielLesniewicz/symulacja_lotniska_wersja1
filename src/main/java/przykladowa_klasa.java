@@ -11,6 +11,5 @@ public class przykladowa_klasa {
 
         System.out.println("Odpowiedz do Patryka");
 
-
         }
 }
