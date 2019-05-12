@@ -107,9 +107,6 @@ public class WiezaKontroliLotow {
 
 
 
-
-
-
     // trzeba sprawdzic czy pasy wolne, jesli nie to odliczanie i nowa generacja
     public void ladowanieAwionetka() {
 
@@ -122,17 +119,6 @@ public class WiezaKontroliLotow {
     public void ladowanieTowarowy() {
 
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
