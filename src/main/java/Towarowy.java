@@ -4,33 +4,65 @@ public class Towarowy extends  Samolot {
 
     private int ladownosc;
     private int iloscTowaru;
-    private Zbiornik zbiornik;
 
     //konstruktor
     public Towarowy(String nazwa)
     {
-        super(nazwa, 2);
+        super(nazwa, 2, 1000);
+        setCzasTankowania(5);
+        setCzasZaladunku(4);
+        setCzasRozladunku(3);
         ladownosc = 1000;
         iloscTowaru = 0;
-        zbiornik = new Zbiornik(1000);
     }
 
-    public void dodajLadunek(int ladunek)
+
+    Scanner in = new Scanner(System.in);
+    @Override
+    public void dodajLadunek()
     {
+        System.out.print("Podaj wartosc ladunku ktory chcesz zaladowac na poklad: ");
+        int ladunek = in.nextInt();
         if(ladunek + iloscTowaru  > ladownosc )
         {
             iloscTowaru = ladownosc;
             System.out.println("Nie udalo zaladowac sie wszystkiego poniewaz skonczylo sie miejsce");
             System.out.println("Ilosc ladunku niezaladowanego: " + (ladunek - (ladownosc - iloscTowaru)));
         }
-        else if(iloscTowaru == ladownosc)
-        {
-            System.out.println("Nie mozna zaladowac samolotu, samolot jest juz pelny");
-        }
         else
         {
+            System.out.println("Zaladunek samolotu:  ");
+            Menu.odliczanie(podajCzasZaladunku());
             iloscTowaru += ladunek;
+            System.out.println("Zaladunek wykonano pomyslnie.");
+            System.out.println("Obecna liczba ladunku na pokladzie: " + iloscTowaru);
         }
+    }
+
+    @Override
+    public void rozladuj()
+    {
+        if(iloscTowaru == 0)
+            System.out.println("Samolot jest pusty, brak towaru do rozladowania.");
+        else
+        {
+            System.out.println("Liczba towarow do rozladowania: " + iloscTowaru);
+            System.out.println("Rozladowywanie towaru: ");
+            Menu.odliczanie(podajCzasRozladunku());
+            System.out.println("Samolot rozladowano pomyslnie");
+        }
+    }
+
+    @Override
+    public int ileMiejscPoklad()
+    {
+        return iloscTowaru;
+    }
+
+    @Override
+    public int ileMiejsc()
+    {
+        return ladownosc;
     }
 
     public void rozladujLadunek()
@@ -52,13 +84,6 @@ public class Towarowy extends  Samolot {
                 iloscTowaru -= rozladunek;
             }
         }
-    }
-
-
-    @Override
-    public int ileMiejsc()
-    {
-        return iloscTowaru;
     }
 
     @Override

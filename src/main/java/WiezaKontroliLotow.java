@@ -1,175 +1,229 @@
 import java.util.Scanner;
+import java.util.Random;
 
 public class WiezaKontroliLotow {
 
-    private int pasyPasazerskieWolne;
-    private int pasyPasazerskieZajete;
-    private int pasyTowaroweWolne;
-    private int pasyTowaroweZajete;
-    private int pasyAwionetkiWolne;
-    private int pasyAwionetkiZajete;
+    private final int ileMiejscMagazyn = 5;
+    private final int ilePasowAwionetki = 3;
+    private final int ilePasowPasazerski = 4;
+    private final int ilePasowTowarowy = 4;
 
-    // nie wiem jak robimy tą kolejkę, czy tablicami czy jak
+    private boolean[] pasyAwionetki = new boolean[ilePasowAwionetki];
+    private boolean[] pasyPasazerski = new boolean[ilePasowPasazerski];
+    private boolean[] pasyTowatowy = new boolean[ilePasowTowarowy];
 
-    public void ladowaniePasazerski()
-    {
+    // magazyn samolotow w ktorych sa dostepne samoloty do wystartowania
+    Samolot[][] magazynSamolotow = new Samolot[3][ileMiejscMagazyn];
 
-    }
+    //konstruktor, samoloty ktore mamy na starcie w magazynie
+    public WiezaKontroliLotow() {
+        // na poczatku symulacji mamy 2 awionetki w magazynie
+        magazynSamolotow[0][0] = new Awionetka("Awionetka1");
+        magazynSamolotow[0][1] = new Awionetka("Awionetka2");
 
-    public void zaladunekPasazerski()
-    {
+        //na poczatku symulacji mamy 2 samoloty pasazaerskie w magazynie
+        magazynSamolotow[1][0] = new Pasazerski("Pasazerski1");
+        magazynSamolotow[1][1] = new Pasazerski("Pasazerski2");
 
-    }
-
-    public void ladowanieTowarowy()
-    {
-
-    }
-
-    public void zaladunekTowarowy()
-    {
+        //na poczatku symulacji mamy 1 samolot towarowy w magazynie
+        magazynSamolotow[2][0] = new Towarowy("Towarowy1");
 
     }
 
-    public void ladowanieAwionetka()
+    public boolean czyMozeStartowac(int wybor, int index)
     {
-
-    }
-
-    public void zaladunekAwionetka()
-    {
-
-    }
-
-    public static void odliczanie(int sekundy)
+        // sprawdza czy moze wsytartowac samolot, jesli bedzie wiecej paliwa niz 75% pojemnosci to moze i zwraca true
+        if(magazynSamolotow[index][wybor].sprawdzZbiornik() > 0.75 * magazynSamolotow[index][wybor].pojemnoscZbiornika())
         {
-            long current = System.currentTimeMillis(); int i = sekundy; while(i > 0) {
-            if(System.currentTimeMillis() - current > 1000) {
-                System.out.println(i--);
-                current = System.currentTimeMillis();
-            }
+            magazynSamolotow[index][wybor] = null;  // dany samolot odlatuje a wiec usuwamy go z magazynu
+            return true;
         }
-            System.out.println("Wykonano!");
+        else
+            return  false;
+    }
+
+
+    // tankowanie samolotu
+    public void zatankujSamolot(int wybor, int index)
+    {
+        magazynSamolotow[index][wybor].zatankuj();
+    }
+
+    public void sprawdzZbiornikSamolotu(int wybor, int index)
+    {
+        System.out.println("Zawartosc paliwa w zbiorniku: " + magazynSamolotow[index][wybor].sprawdzZbiornik()
+        + ", pojemnosc maksymalna " + magazynSamolotow[index][wybor].pojemnoscZbiornika());
+    }
+
+
+    public void zaladunekPasazerski(int wybor) {
+        System.out.println("Obecna liczba pasazerow na pokladzie: " + magazynSamolotow[1][wybor].ileMiejscPoklad());
+        System.out.println("Liczba wszystkich miejsc: " + magazynSamolotow[1][wybor].ileMiejsc());
+
+        //gdy samolot bedzie pelny
+        if(magazynSamolotow[1][wybor].ileMiejscPoklad() == magazynSamolotow[1][wybor].ileMiejsc())
+            System.out.println("Samolot jest juz pelny, nie mozna go zaladowac");
+        else
+            magazynSamolotow[1][wybor].dodajLadunek();                    // dodajemy ladunek
+
+    }
+
+
+    public void zaladunekTowarowy(int wybor) {
+        System.out.println("Obecna liczba ladunku na pokladzie: " + magazynSamolotow[2][wybor].ileMiejscPoklad());
+        System.out.println("Liczba maksymalnej ladowalnosci: " + magazynSamolotow[2][wybor].ileMiejsc());
+
+        //gdy samolot bedzie pelny
+        if(magazynSamolotow[2][wybor].ileMiejscPoklad() == magazynSamolotow[2][wybor].ileMiejsc())
+            System.out.println("Samolot jest juz pelny, nie mozna go zaladowac");
+        else
+            magazynSamolotow[2][wybor].dodajLadunek();      //metoda dodaje ladunek da samolotu
+
+    }
+
+
+    public void zaladunekAwionetka(int wybor) {
+        System.out.println("Obecna liczba pasazerow na pokladzie: " + magazynSamolotow[0][wybor].ileMiejscPoklad());
+        System.out.println("Liczba wszystkich miejsc: " + magazynSamolotow[0][wybor].ileMiejsc());
+
+        //gdy samolot bedzie pelny
+        if(magazynSamolotow[0][wybor].ileMiejscPoklad() == magazynSamolotow[0][wybor].ileMiejsc())
+            System.out.println("Samolot jest juz pelny, nie mozna go zaladowac");
+        else
+            magazynSamolotow[0][wybor].dodajLadunek();                    // dodajemy pasazerow
+    }
+
+    public void rozladunekSamolotu(int wybor, int index)
+    {
+        magazynSamolotow[index][wybor].rozladuj();
     }
 
 
 
-        public static void main(String[] args) {
-
-            Scanner in = new Scanner(System.in);
 
 
-            System.out.println("Zaczynamy symulację!");
-            System.out.println("Na starcie steruemy trzema samolotami różnych typów, możemy nimi lądować oraz startować");
-            System.out.println("Z każdą operacją związane są dodatkowe niezbędne do wykonani czynności, jak np tankowanie samolotu");
-            System.out.println("Możliwe jest też, że pasy będą zajęte i nie będzie można wylądować");
-
-            //tu wyświetlić jakie samoloty mamy do dyspozycji może
-            int wybor=-1, wybor_typu=-1;
-
-            for (;;) {
-
-                //tu wyświetlić jakie samoloty mamy do dyspozycji może
-                //dodatkowo tez ich właściwości, np ile pasażerów na pokładzie itp
-
-                //dalej menu co chcemy robić z nimi
-
-                System.out.println("-------------------------------------");
-                System.out.println("1. Odlot samolotu.");
-                System.out.println("2. Przylot samolotu.");
-                System.out.println("3. Koniec symulacji");
-
-                System.out.println("Wybierz opcję i wpisz numer: ");
-                wybor = in.nextInt();
-
-                switch (wybor) {
-                        case 1: {
-                            System.out.println("Wybrano odlot samolotu.");
-                            System.out.println("1. Awionetka");
-                            System.out.println("2. Pasazerski");
-                            System.out.println("3. Towarowy");
-
-                            wybor_typu =in.nextInt();
-
-                                switch (wybor_typu){
-                                    case 1: {
-                                        //działania dla awionetki
-                                        System.out.println("jakieś instrukcje dla odlotu");
-                                        break;
-                                    }
-
-                                    case 2: {
-                                        //działania dla pasażerskiego
-                                        System.out.println("jakieś instrukcje dla odlotu");
-                                        break;
-                                    }
-
-                                    case 3: {
-                                        //działania dla towarowego
-                                        System.out.println("jakieś instrukcje dla odlotu");
-                                        break;
-                                    }
-                                }
-                                //jak odlot to sprwdzić czy jest paliwo losując i jeśli nie ma to zatankować np.
-                                // wpuścić ludzi/czy tam towary załadować itp
 
 
-                            break;
-                        }
-                        case 2: {
-                            System.out.println("Wybrano przylot samolotu.");
-                            System.out.println("1. Awionetka");
-                            System.out.println("2. Pasazerski");
-                            System.out.println("3. Towarowy");
 
-                            wybor_typu =in.nextInt();
 
-                            switch (wybor_typu){
-                                case 1: {
-                                    //działania dla awionetki
-                                    System.out.println("jakieś instrukcje dla przylotu");
-                                    break;
-                                }
 
-                                case 2: {
-                                    //działania dla pasażerskiego
-                                    System.out.println("jakieś instrukcje dla przylotu");
-                                    break;
-                                }
 
-                                case 3: {
-                                    //działania dla towarowego
-                                    System.out.println("jakieś instrukcje dla przylotu");
-                                    break;
-                                }
-                            }
 
-                            //przylatuje to patrzymy czy jest wolny pas
-                            //i ludzie wysiadają, wtedy odpowiednie parametry trzeba wyzerować
 
-                            break;
-                        }
+    // trzeba sprawdzic czy pasy wolne, jesli nie to odliczanie i nowa generacja
+    public void ladowanieAwionetka() {
 
-                        case 3: {
-                            System.out.println("KONIEC SYMULACJI");
-                            System.exit( 0); // wywali program z zerem
-                            break;
-                        }
+    }
 
-                        default: {
+    public void ladowaniePasazerski() {
 
-                        }
+    }
 
-                }
+    public void ladowanieTowarowy() {
 
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private Scanner in = new Scanner(System.in);
+
+    public int pokaz_wybierzMagazyn(int rodzaj) {
+        int index = rodzaj - 1;
+        int ile = 0;
+        System.out.println("Wybierz samolot z magazynu: ");
+        for (int i = 0; i < ileMiejscMagazyn; i++) {
+            if (magazynSamolotow[index][i] != null) {
+                System.out.println("Miejsce " + (i + 1) + ": " + magazynSamolotow[index][i].getnazwa());
+                ile++;
+            } else
+                System.out.println("Miejsce " + (i + 1) + ": ----");
+        }
+        if (ile != 0) {
+            System.out.println("\nWybor: ");
+            int wybor = in.nextInt();                       //nalezy przechwycic wyjatek
+            while (magazynSamolotow[index][wybor - 1] == null) {
+                System.out.println("Wybrane miejsce jest puste. Sprobuj ponownie.");
+                System.out.print("Wybor: ");
+                wybor = in.nextInt();                        // obsluzyc wyjatek
             }
 
-
+            System.out.println("Wybrano samolot: " + magazynSamolotow[index][wybor - 1].getnazwa());
+            return wybor - 1;
+        } else {
+            System.out.println("Magazyn jest pusty. Aby wystartowac samolot musi zaparkowac w magazynie");
+            return -1;
         }
 
+    }
 
-        }
 
+    public int wyswietlPasy(int rodzaj) {
+        System.out.println("Dostepnosc pasow: ");
+
+        int ile = 0;        // przechowuje liczbe wolnych pasow
+        if (rodzaj == 1)
+            for (int i = 0; i < ilePasowAwionetki; i++) {
+                if (pasyAwionetki[i] == true) {
+                    System.out.println("Pas nr " + (i + 1) + ": wolny");
+                    ile++;
+                } else
+                    System.out.println("Pas nr " + (i + 1) + ": zajety");
+            }
+        else if (rodzaj == 2)
+            for (int i = 0; i < ilePasowPasazerski; i++) {
+                if (pasyPasazerski[i] == true) {
+                    System.out.println("Pas nr " + (i + 1) + ": wolny");
+                    ile++;
+                } else
+                    System.out.println("Pas nr " + (i + 1) + ": zajety");
+            }
+        else
+            for (int i = 0; i < ilePasowTowarowy; i++) {
+                if (pasyTowatowy[i] == true) {
+                    System.out.println("Pas nr " + (i + 1) + ": wolny");
+                    ile++;
+                } else
+                    System.out.println("Pas nr " + (i + 1) + ": zajety");
+            }
+
+        if (ile == 0)        // wszystkie pasy zajete
+            return -1;
+        else
+            return 1;
+    }
+
+
+    public void generatorSamolotow() {
+        Random r = new Random();
+        for (int i = 0; i < ilePasowAwionetki; i++)
+            pasyAwionetki[i] = r.nextBoolean();
+
+        for (int i = 0; i < ilePasowPasazerski; i++)
+            pasyPasazerski[i] = r.nextBoolean();
+
+        for (int i = 0; i < ilePasowTowarowy; i++)
+            pasyTowatowy[i] = r.nextBoolean();
+    }
+
+}
 
 
 
