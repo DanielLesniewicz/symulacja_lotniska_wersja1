@@ -16,6 +16,17 @@ public class Pasazerski extends Samolot {
         iloscPasazerowPoklad = 0;
     }
 
+    // konstruktor inicjalizuje nasz obiekt innym obiektem
+    public Pasazerski(Pasazerski obj)
+    {
+        super(obj.getnazwa(), 1, 1000);
+        iloscPasazerow = 120;
+        setCzasZaladunku(5);
+        setCzasTankowania(3);
+        setCzasRozladunku(4);
+        iloscPasazerowPoklad = obj.ileMiejscPoklad();
+    }
+
     @Override
     public int ileMiejscPoklad()
     {
@@ -32,10 +43,15 @@ public class Pasazerski extends Samolot {
     Scanner in = new Scanner(System.in);
 
     @Override
-    public void dodajLadunek()
+    public void dodajLadunek() throws Exception
     {
         System.out.println("Podaj liczbe osob ktore maja wejsc na poklad");
-        int osoby = in.nextInt();                                               // przechwycic wyjatek
+        int osoby = Menu.wczytajOpcje();
+        while (osoby < 0)
+        {
+            System.out.println("Nie mozna podac ujemnej wartosci. Sprobuj ponownie: ");
+            osoby = Menu.wczytajOpcje();
+        }
         if(osoby + iloscPasazerowPoklad > iloscPasazerow)  // jesli liczba bedzie przekraczac liczbe dostepnych miejsc
         {
             System.out.println("Tyle osob nie zmiesci sie w samolocie");
@@ -61,30 +77,8 @@ public class Pasazerski extends Samolot {
             System.out.println("Liczba osob wysiadajacych z samolotu: " + iloscPasazerowPoklad);
             System.out.println("Rozladunek:");
             Menu.odliczanie(podajCzasRozladunku());
+            iloscPasazerowPoklad = 0;
             System.out.println("Wyjscie ludzi z samolotu pomyslne");
         }
-    }
-
-    @Override
-    public void zatankuj()
-    {
-        System.out.println("Zatankowano samolot pasażerski!");
-    }
-    @Override
-    public void ladowanie()
-    {
-
-    }
-
-    @Override
-    public void odlot()
-    {
-
-    }
-
-    @Override
-    public void odstawMagazyn()
-    {
-
     }
 }

@@ -16,13 +16,27 @@ public class Towarowy extends  Samolot {
         iloscTowaru = 0;
     }
 
+    public Towarowy(Towarowy obj)
+    {
+        super(obj.getnazwa(), 2,1000);
+        setCzasTankowania(5);
+        setCzasZaladunku(4);
+        setCzasRozladunku(3);
+        ladownosc = 1000;
+        iloscTowaru = obj.ileMiejscPoklad();
+    }
 
     Scanner in = new Scanner(System.in);
     @Override
-    public void dodajLadunek()
+    public void dodajLadunek() throws Exception
     {
         System.out.print("Podaj wartosc ladunku ktory chcesz zaladowac na poklad: ");
-        int ladunek = in.nextInt();
+        int ladunek = Menu.wczytajOpcje();
+        while (ladunek < 0)
+        {
+            System.out.println("Nie mozna podac ujemnej wartosci. Sprobuj ponownie: ");
+            ladunek = Menu.wczytajOpcje();
+        }
         if(ladunek + iloscTowaru  > ladownosc )
         {
             iloscTowaru = ladownosc;
@@ -49,6 +63,7 @@ public class Towarowy extends  Samolot {
             System.out.println("Liczba towarow do rozladowania: " + iloscTowaru);
             System.out.println("Rozladowywanie towaru: ");
             Menu.odliczanie(podajCzasRozladunku());
+            iloscTowaru = 0;
             System.out.println("Samolot rozladowano pomyslnie");
         }
     }
@@ -84,29 +99,5 @@ public class Towarowy extends  Samolot {
                 iloscTowaru -= rozladunek;
             }
         }
-    }
-
-    @Override
-    public void zatankuj()
-    {
-        System.out.println("Zatankowano samolot towarowy!");
-    }
-
-    @Override
-    public void ladowanie()
-    {
-
-    }
-
-    @Override
-    public void odlot()
-    {
-
-    }
-
-    @Override
-    public void odstawMagazyn()
-    {
-
     }
 }

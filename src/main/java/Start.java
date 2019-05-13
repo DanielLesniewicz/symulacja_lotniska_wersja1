@@ -1,6 +1,6 @@
 public class Start {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         System.out.println("Zaczynamy symulację!");
         System.out.println("Na starcie steruemy trzema samolotami różnych typów, możemy nimi lądować oraz startować");

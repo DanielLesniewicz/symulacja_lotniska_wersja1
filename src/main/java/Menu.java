@@ -1,103 +1,98 @@
 import java.util.Scanner;
 
-public class Menu {
+class Menu {
 
     private static WiezaKontroliLotow wieza = new WiezaKontroliLotow();
 
 
-    public static void Odloty(int wybrany, int rodzaj)
-    {
-        int index = rodzaj - 1;
-        System.out.println("\nWybierz jedna z dostepnych opcji: ");
-        System.out.println("-------------------------------------");
-        System.out.println("1. Start samolotu.");
-        System.out.println("2. Tankowanie.");
-        System.out.println("3. Sprawdz zbiornik.");
-        System.out.println("4. Zaladunek");
-        System.out.println("5. Rozladunek.");
-        System.out.println("6. Odstaw do magazynu");
-        System.out.println("7. POWRÓT (do menu glownego)");
+    public static void Odloty(int rodzaj) throws Exception {
+        int typ = rodzaj - 1;
+        int wybor;
+        boolean czyOdlecial = false;                //zmienna przechowuje wartosc czy samolot odlecial z lotniska
+        boolean czyOdstawionyDoMagazynu = false;    // zmienna przechowuje wartosc czy samolot zostal odstawiony do magazynu
+        boolean czyWyjscZpetli = false;
 
-        Scanner in = new Scanner(System.in);
-        System.out.print("Wybor: ");
-        int wybor = in.nextInt();                       // przechwycic wyjatek trzeba
-        while(wybor < 0 || wybor > 7)
-        {
-            System.out.print("Wybierz prawidlowa opcje: ");
-            wybor = in.nextInt();
-        }
 
-        switch(wybor)
-        {
-            case 1:
+        //petla zakonczy sie gdy uzytkownik odleci samolotem lub odstawi samolot do magazynu
+        do {
+
+            System.out.println("\nWybierz jedna z dostepnych opcji: ");
+            System.out.println("-------------------------------------");
+            System.out.println("1. Start samolotu.");
+            System.out.println("2. Tankowanie.");
+            System.out.println("3. Sprawdz zbiornik.");
+            System.out.println("4. Zaladunek");
+            System.out.println("5. Rozladunek.");
+            System.out.println("6. Odstaw do magazynu");
+            System.out.println("7. Wyswietl dostepnosc miejsc na pokladzie");
+
+            wybor = Menu.wczytajOpcje();
+            while (wybor < 0 || wybor > 7)
             {
-                if(wieza.czyMozeStartowac(wybrany, index))
+                System.out.print("Wybierz prawidlowa opcje: ");
+                wybor = Menu.wczytajOpcje();
+            }
+
+            switch (wybor) {
+                case 1:                                         // gdy wybierzemy start samolotu
                 {
-                    System.out.println("Samolot odleci za: ");
-                    Menu.odliczanie(3);
-                    System.out.println("Samolot odlecial!");
-                    Menu.wyborTypu();                           // samolot odlecial a wiec zaczynamy od poczatku
+                    if (wieza.czyMozeStartowac(typ)) {
+                        System.out.println("Samolot odleci za: ");
+                        Menu.odliczanie(3);
+                        System.out.println("Samolot odlecial!");
+                        czyWyjscZpetli = true;                     // zmienna potwierdza ze samolot odlecial
+                    }
+                    break;
                 }
-                else {
-                    System.out.println("Za malo paliwa w samolocie, musisz zatankowac samolot przed odlotem");
-                    Menu.Odloty(wybor, rodzaj);                 // ponowne wyowlanie naszego menu odloty aby przykladowo zatankowac
+                case 2: {
+                    wieza.zatankujSamolot(typ);           // dajemy informacje do wieży jaki samolot ma byc zatankowany
+                    break;
                 }
-                break;
+                case 3: {
+                    wieza.sprawdzZbiornikSamolotu(typ);      // dajemy informacje dla ktorego samolotu mamy sprawdzic zbiornik
+                    break;
+                }
+                case 4:
+                    //zaladunek
+                {
+                    if(typ == 0)
+                        wieza.zaladunekAwionetka();
+                    else if(typ == 1)
+                        wieza.zaladunekPasazerski();
+                    else
+                        wieza.zaladunekTowarowy();
+                    break;
+                }
+                case 5: {
+                    wieza.rozladunekSamolotu(typ);
+                    break;
+                }
+                case 6: {
+                    int ile = wieza.pokazMagazyn(typ);     // zmienna ile przechowuje ilosc zajetych miejsc
+
+                    if(ile == wieza.ileMiejscaMagazyn())   //gdy wszystkie miejsca w magazynie sa zajete
+                        System.out.println("Wszystkie miejsca w magazynie sa zajete. Musisz odleciec samolotem.");
+                    else{
+                        wieza.odstawDoMagazynu(typ);
+                        czyWyjscZpetli = true;         // zmienna potwierdza ze samolot zostal odstawiony do magazynu
+                    }
+                    break;
+                }
+                case 7: {
+                    int miejsca = wieza.ileMiejscPoklad(typ);
+                    System.out.println("Na pokladzie jest: " + miejsca);
+                    break;
+                }
             }
-            case 2:
-            {
-                wieza.zatankujSamolot(wybrany, index);           // dajemy informacje do wieży jaki samolot ma byc zatankowany
-                Menu.Odloty(wybor, rodzaj);                 // ponowne wyowlanie naszego menu odloty
-                break;
-            }
-            case 3:
-            {
-                wieza.sprawdzZbiornikSamolotu(wybrany, index);      // dajemy informacje dla ktorego samolotu mamy sprawdzic zbiornik
-                Menu.Odloty(wybor, rodzaj);                 // ponowne wyowlanie naszego menu odloty
-                break;
-            }
-            case 4:
-                //zaladunek
-            {if(index == 0) // jesli awionetka (rodzaj - 1)
-                wieza.zaladunekAwionetka(wybrany);
-            else if(index == 1) //jesli pasazerski
-                wieza.zaladunekPasazerski(wybrany);
-            else                                         // jesli towarowy
-                wieza.zaladunekTowarowy(wybrany);
-
-            Menu.Odloty(wybor, rodzaj);                 // ponowne wyowlanie naszego menu odloty
-
-            break;
-            }
-            case 5:
-            {
-                wieza.rozladunekSamolotu(wybrany, index);
-
-                Menu.Odloty(wybor, rodzaj);                 // ponowne wyowlanie naszego menu odloty
-                break;
-            }
-            case 6:
-            {
-                //trzeba sprawdzic czy magazyn jest wolny jesli tak to umozliwic podanie miejsca gdzie chcemy umiescic samolot
-
-                Menu.Odloty(wybor, rodzaj);                 // ponowne wyowlanie naszego menu odloty
-                break;
-            }
-            case 7: {
-                Menu.wyborTypu();
-                break;
-            }
-
-        }
-
-
-
+        }while (czyWyjscZpetli == false);
     }
 
 
-    public static void wyborTypu()
-    {
-        Scanner in = new Scanner(System.in);
+
+
+
+
+    public static void wyborTypu() throws Exception {
         int wybor;
 
         do {
@@ -108,11 +103,18 @@ public class Menu {
             System.out.println("3. Koniec symulacji");
 
 
-            System.out.println("Wybierz opcje i wpisz numer: ");
-            wybor = in.nextInt();           // trzeba zrobic wyjatek zeby nie wywalilo
+            System.out.println("Wybierz opcje i wpisz numer.");
+            wybor = wczytajOpcje();           // trzeba zrobic wyjatek zeby nie wywalilo
+
+            while (wybor > 3 || wybor < 1)    // obsluga gdy uzytkownik wybierze nieprawidlowa opcje
+            {
+                System.out.println("Wybierz opcje od 1 do 3:");
+                wybor = wczytajOpcje();
+            }
 
             if (wybor == 3)
                 System.out.println("Zakonczenie symulacji. Do widzenia!");
+
             else {
                 int wybor_typu;
 
@@ -123,35 +125,43 @@ public class Menu {
                         System.out.println("2. Pasazerski");
                         System.out.println("3. Towarowy");
 
-                        wybor_typu = in.nextInt();
+                        wybor_typu = wczytajOpcje();
+
+                        while (wybor_typu > 3 || wybor_typu <1)             // obsluga gdy uzytkownik wybierze nieprawidlowa opcje
+                        {
+                            System.out.println("Wybierz opcje od 1 do 3.");
+                            wybor_typu = wczytajOpcje();
+                        }
 
                         switch (wybor_typu) {
                             case 1: {
                                 // działania dla awionetek
-                                int wybrany = wieza.pokaz_wybierzMagazyn(1);
-                                if(wybrany >= 0)
-                                {
-                                    int wartosc = wieza.wyswietlPasy(1);
+                                boolean czyWybrano = wieza.pokaz_wybierzMagazyn(1);
 
-                                    while (wartosc == -1)
+                                if(czyWybrano)
+                                {
+                                    int wartosc = wieza.wyswietlPasy(1);    // wyswietl dostepnosc pasow na lotnisku
+
+                                    while (wartosc == -1)                         //dopoki wszystkie pasy zajete(funkcja wyswwietlPasy zwraca -1 wtedy)
                                     {
                                         System.out.println("Wszystkie pasy zajete. Nalezy poczekac do odlotu samolotow");
                                         System.out.println("Sytuacja na lotnisku po 50 min: ");
                                         Menu.odliczanie(5);
-                                        wieza.generatorSamolotow();                                     // nowa sytuacja na lotnisku
+                                        wieza.generatorSamolotow();                // nowa sytuacja na lotnisku
 
                                         wartosc = wieza.wyswietlPasy(1);
                                     }
 
-                                    Menu.Odloty(wybrany, 1);
+                                    System.out.println("Sa pasy wolne! Samolot ustawia sie na jednym z pasow.");
+                                    Menu.Odloty(1);    // wybranie opcji dla odlotow
                                 }
                                 break;
                             }
 
                             case 2: {
                                 //działania dla pasażerskiegh
-                                int wybrany = wieza.pokaz_wybierzMagazyn(2);
-                                if(wybrany >= 0)
+                                boolean czyWybrano = wieza.pokaz_wybierzMagazyn(2);
+                                if(czyWybrano)
                                 {
                                     int wartosc = wieza.wyswietlPasy(2);
                                     while (wartosc == -1)
@@ -164,15 +174,16 @@ public class Menu {
                                         wartosc = wieza.wyswietlPasy(2);
                                     }
 
-                                    Menu.Odloty(wybrany, 2);
+                                    System.out.println("Sa wolne pasy! Samolot ustawia sie na jednym z pasow.");
+                                    Menu.Odloty(2);
                                 }
                                 break;
                             }
 
                             case 3: {
                                 //działania dla towarowego
-                                int wybrany = wieza.pokaz_wybierzMagazyn(3);
-                                if(wybrany >= 0)
+                                boolean czyWybrano = wieza.pokaz_wybierzMagazyn(3);
+                                if(czyWybrano)
                                 {
                                     int wartosc = wieza.wyswietlPasy(3);
                                     while (wartosc == -1)
@@ -185,67 +196,17 @@ public class Menu {
                                         wartosc = wieza.wyswietlPasy(3);
                                     }
 
-                                    Menu.Odloty(wybrany, 3);  // wywołanie metody statycznej
+                                    System.out.println("Sa wolne pasy! Samolot ustawia sie na jednym z pasow.");
+                                    Menu.Odloty(3);  // wywołanie metody statycznej
                                 }
                                 break;
                             }
                         }
-                        //jak odlot to sprwdzić czy jest paliwo losując i jeśli nie ma to zatankować np.
-                        // wpuścić ludzi/czy tam towary załadować itp
-
                         break;
                     }
+                    //gdy uzytkownik wybiera przylot samolotu
                     case 2: {
-                        System.out.println("Wybrano przylot samolotu.");
-                        System.out.println("1. Awionetka");
-                        System.out.println("2. Pasazerski");
-                        System.out.println("3. Towarowy");
-
-                        wybor_typu = in.nextInt();
-
-                        //jeszcze by trzeba sprawdzić, czy wgl jest jakiś w powietrzu
-
-
-                        switch (wybor_typu) {
-                            case 1: {
-                                int wartosc = wieza.wyswietlPasy(1);
-                                while (wartosc == -1)
-                                {
-                                    System.out.println("Wszystkie pasy zajete. Nalezy poczekac aby wylądować");
-                                    System.out.println("Sytuacja na lotnisku po 20 min: ");
-                                    Menu.odliczanie(2);
-                                    wieza.generatorSamolotow();                                     // nowa sytuacja na lotnisku
-
-                                    wartosc = wieza.wyswietlPasy(1);
-
-                                }
-
-
-
-
-
-                                //działania dla awionetki
-                                System.out.println("jakieś instrukcje dla przylotu");
-                                break;
-                            }
-
-                            case 2: {
-                                int wartosc = wieza.wyswietlPasy(2);
-                                //działania dla pasażerskiego
-                                System.out.println("jakieś instrukcje dla przylotup");
-                                break;
-                            }
-
-                            case 3: {
-                                int wartosc = wieza.wyswietlPasy(3);
-                                //działania dla towarowego
-                                System.out.println("jakieś instrukcje dla przylotuo");
-                                break;
-                            }
-                        }
-
-                        //przylatuje to patrzymy czy jest wolny pas
-                        //i ludzie wysiadają, wtedy odpowiednie parametry trzeba wyzerowa
+                        System.out.println("Ta opcja bedzie dostepna pozniej");
                         break;
                     }
 
@@ -259,6 +220,7 @@ public class Menu {
     }
 
 
+    // odpowiada za odliczanie
     public static void odliczanie(int sekundy)
     {
         long current = System.currentTimeMillis();
@@ -270,4 +232,22 @@ public class Menu {
             }
         }
     }
+
+    //funkcja wczytująca opcje wyboru
+    public static int wczytajOpcje() throws Exception
+    {
+        int wybor= 0;
+        Scanner in = new Scanner(System.in);
+        try {
+            System.out.print("Wybor: ");
+            wybor = in.nextInt();
+        }
+        catch (Exception ex)
+        {
+            System.out.println("Wprowadz poprawna opcje.");
+            wybor = wczytajOpcje();
+        }
+        return wybor;
+    }
+
 }

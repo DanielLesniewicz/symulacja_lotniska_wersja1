@@ -17,6 +17,20 @@ public class Awionetka extends Samolot {
     }
 
 
+    public Awionetka(Awionetka obj)
+    {
+        super(obj.getnazwa(), 3, 200);
+        iloscPasazerow = 4;
+        iloscPasazerowPoklad = obj.ileMiejscPoklad();
+        setCzasZaladunku(3);
+        setCzasTankowania(2);
+        setCzasRozladunku(5);
+    }
+
+    public Awionetka()
+    {}
+
+
 
     @Override
     public int ileMiejsc()
@@ -28,11 +42,19 @@ public class Awionetka extends Samolot {
     public int ileMiejscPoklad() { return iloscPasazerowPoklad; }
 
 
+
     Scanner in = new Scanner(System.in);
     @Override
-    public void dodajLadunek()
+    public void dodajLadunek() throws Exception
     {
-        int osoby = in.nextInt();                                               // przechwycic wyjatek
+        int osoby;
+        System.out.println("Wprowadz ile pasazerow ma wejsc na poklad");
+        osoby = Menu.wczytajOpcje();
+        while (osoby < 0)
+        {
+            System.out.println("Nie mozna podac ujemnej wartosci. Sprobuj ponownie: ");
+            osoby = Menu.wczytajOpcje();
+        }
         if(osoby + iloscPasazerowPoklad > iloscPasazerow)  // jesli liczba bedzie przekraczac liczbe dostepnych miejsc
         {
             System.out.println("Tyle osob nie zmiesci sie w samolocie");
@@ -56,32 +78,10 @@ public class Awionetka extends Samolot {
             System.out.println("Samolot jest pusty, nie mozna go rozladowac");
         else {
             System.out.println("Liczba osob wysiadajacych z samolotu: " + iloscPasazerowPoklad);
-            System.out.println("Rozladunek:");
+            System.out.println("Rozladunek: ");
             Menu.odliczanie(podajCzasRozladunku());
+            iloscPasazerowPoklad = 0;
             System.out.println("Wyjscie ludzi z samolotu pomyslne");
         }
-    }
-
-    @Override
-    public void zatankuj()
-    {
-        System.out.println("Zatankowano awionetkę!");
-    }
-    @Override
-    public void ladowanie()
-    {
-
-    }
-
-    @Override
-    public void odlot()
-    {
-
-    }
-
-    @Override
-    public void odstawMagazyn()
-    {
-
     }
 }

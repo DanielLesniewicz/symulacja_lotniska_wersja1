@@ -12,19 +12,22 @@ public class Zbiornik {
         iloscPaliwa = r.nextInt(pojemnosc);
     }
 
+    //podaje obecna ilosc paliwa
     public int podajIloscPaliwa()
     {
         return iloscPaliwa;
     }
 
+    //podaje pojemnosc zbiornika na paliwo
     public int podajPojemnosc()
     {
         return pojemnosc;
     }
 
+    //tankuje samolot
     public void zatankuj()
     {
         iloscPaliwa = pojemnosc;
-        System.out.println("Samolot zostal zatankowany");
+        System.out.println("Zatankowano samolot!");
     }
 }
